@@ -20,15 +20,7 @@ class Mobile extends Point {
   }
 
   targetClosest(targetArray) {
-    var dmin = width * width + height * height;
-    for (var i = 0; i < targetArray.length; i++) {
-      var p = targetArray[i];
-      var d = p5.Vector.dist(p, this);
-      if (d < dmin) {
-        this._target = p;
-        dmin = d;
-      }
-    }
+    this._target = nextClosest(this, targetArray);
   }
 
   update() {
