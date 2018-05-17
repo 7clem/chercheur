@@ -24,10 +24,10 @@ function setup() {
 }
 
 function draw() {
-  background(0);
+  background(255);
 
   strokeWeight(2);
-  stroke(0, 255, 0);
+  stroke(0, 0, 0);
 
   if (drawAllInOneFrame) {
     drawAll();

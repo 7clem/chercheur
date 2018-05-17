@@ -33,7 +33,8 @@ class Mobile extends Point {
       var steering = p5.Vector.sub(desiredSpeed, this.spd);
       var acc = steering.setMag(maxAcc);
 
-      this.add(acc);
+      this.spd.add(acc);
+      this.add(this.spd);
     } else {
       return false;
     }
@@ -51,7 +52,7 @@ class Mobile extends Point {
     super.draw();
 
     if (drawPath) {
-      stroke(255);
+      stroke(0);
       strokeWeight(1);
       noFill();
       this.path.push(this.copy())
