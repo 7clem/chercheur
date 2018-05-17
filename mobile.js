@@ -9,18 +9,22 @@ class Point extends p5.Vector{
 }
 
 class Mobile extends Point {
-  constructor(x, y, z) {
+  constructor(x, y, z, m) {
     super(x, y, z);
-
+    this.m = 1;
     this.spd = createVector();
-    //this.acc = createVector();
+    this.acc = createVector();
     this._target = createVector();
 
-    //this.path = new Path([v]);
+    this.path = [this.copy()];
+  }
+
+  target(point) {
+      this._target = point;
   }
 
   targetClosest(targetArray) {
-    this._target = nextClosest(this, targetArray);
+    this.target(nextClosest(this, targetArray));
   }
 
   update() {
@@ -29,14 +33,13 @@ class Mobile extends Point {
       var steering = p5.Vector.sub(desiredSpeed, this.spd);
       var acc = steering.setMag(maxAcc);
 
-
       this.add(acc);
     } else {
       return false;
     }
 
     if (p5.Vector.dist(this, this._target) < 3) {
-      path.push(this._target);
+      // this.path.push(this._target);
       var index = points.indexOf(this._target);
       points.splice(index, 1);
       this.targetClosest(points);
@@ -51,11 +54,13 @@ class Mobile extends Point {
       stroke(255);
       strokeWeight(1);
       noFill();
+      this.path.push(this.copy())
       beginShape();
-      for (var p of path) {
+      for (var p of this.path) {
         vertex(p.x, p.y);
       }
       endShape();
     }
+
   }
 }

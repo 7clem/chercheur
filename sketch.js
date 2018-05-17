@@ -1,11 +1,11 @@
 var points = [];
-var nb_points = 1000;
-const maxSpeed = 5; // px / frame
+var nb_points = 100;
+const maxSpeed = 50; // px / frame
 const maxAcc = 1;
 var mobile;
-var path;
+// var targets;
 
-var randPoints;
+const drawAllInOneFrame = false;
 
 function setup() {
   createCanvas(500, 500);
@@ -15,14 +15,12 @@ function setup() {
       points.push(p);
   }
 
-  randPoints = points.slice();
+  // randPoints = points.slice();
 
   mobile = new Mobile(0, 0);
   mobile.targetClosest(points);
 
-  path = [{x:mobile.x, y:mobile.y}];
-  drawAllAtOnce();
-  noLoop();
+  // targets = [{x:mobile.x, y:mobile.y}];
 }
 
 function draw() {
@@ -31,30 +29,56 @@ function draw() {
   strokeWeight(2);
   stroke(0, 255, 0);
 
+  if (drawAllInOneFrame) {
+    drawAll();
+    noLoop();
+  } else {
+    drawPoints();
+    mobile.update();
+    mobile.draw(true);
+  }
+}
+
+function drawPoints(pointSize) {
+  if (pointSize == undefined) pointSize = 3;
+  strokeWeight(pointSize);
   for (p of points) {
     p.draw();
   }
-
-  mobile.update();
-  mobile.draw(true);
 }
+//
+// function orderPoints(pointsArray) {
+//   copyOfPoints = pointsArray.splice();
+//   var inOrder = [];
+//   var p = pointsArray[0];
+//   inOrder.push(p);
+//   var index;
+//   while (copyOfPoints.length > 0) {
+//     p = nextClosest(p, copyOfPoints);
+//     inOrder.push(p);
+//     index = copyOfPoints.indexOf(p);
+//     copyOfPoints.splice(index, 1);
+//   }
+//   return inOrder;
+// }
 
-function drawAllAtOnce() {
+function drawAll() {
   var p = randPoints[0];
   noFill();
   stroke(255, 32, 32);
+  drawPoints(4);
   strokeWeight(1);
+  curveTightness(0);
   beginShape();
   while (p) {
     var x = p.x;
     var y = p.y;
-    vertex(x, y);
+    curveVertex(x, y);
     p = nextClosest(p, randPoints);
     var index = randPoints.indexOf(p);
     randPoints.splice(index, 1);
   }
   endShape();
-
 }
 
 function nextClosest(here, pts) {
