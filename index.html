@@ -7,18 +7,21 @@
     <!-- <script src="../addons/p5.dom.min.js"></script> -->
     <!-- <script src="../addons/p5.sound.min.js"></script> -->
     <!-- <script src="path.js"></script> -->
-
+    <script src="mobile.js"></script>
+    <script src="sketch.js"></script>
   </head>
   <body>
     <div class="slidecontainer">
-      <input type="range" min="0" max="100" value="50" class="slider" id="accSlider">
+      <input type="range" min="0" max="100" class="slider" id="accSlider">
       Max Acceleration : <span id="accLabel"></span>
     </div>
 <div class="slidecontainer">
-    <input type="range" min="0" max="100" value="50" class="slider" id="spdSlider">
+    <input type="range" min="0" max="100" class="slider" id="spdSlider">
     Max Speed : <span id="spdLabel"></span>
 </div>
+<div class="slidecontainer">
+    <input type="range" min="0" max="100" class="slider" id="sloSlider">
+    Slowing distance : <span id="sloLabel"></span>
+</div>
   </body>
-  <script src="mobile.js"></script>
-  <script src="sketch.js"></script>
 </html>

@@ -1,30 +1,35 @@
 var points = [];
-var nb_points = 100;
-var maxSpeed = 2; // px / frame
-var maxAcc = 0.5;
+var nb_points = 50;
+
+// parameters
+var maxAcc = 0.2;
+var maxSpd = 0.2;
+var slowing_distance = 25;
+
 var mobile;
+var drawAllInOneFrame = false;
 
+var keys = ["acc", "spd", "slo"];
+const sliderMax = [1, 5, 20]; //3, 5 ,50
 
-
-var body = document.getElementsByTagName('body')[0];
-var accSlider = document.getElementById("accSlider");
-var spdSlider = document.getElementById("spdSlider");
-var accLabel = document.getElementById("accLabel");
-var spdLabel = document.getElementById("spdLabel");
-
-// Update the current slider value (each time you drag the slider handle)
-accSlider.onchange = function() {
-    maxAcc = this.value * 5 / 100 ;
-    accLabel.innerHTML = maxAcc;
+function setSliderValueToCenter(slider) {
+  slider.value = (slider.min + slider.max) / 2;
 }
 
-spdSlider.onchange = function() {
-    maxSpd = this.value * 20 / 100;
-    spdLabel.innerHTML = maxSpd;
+// update all parameters if any one is changed
+function sliderInput() {
+  let sliders = keys.map( n => document.getElementById(n+"Slider"));
+
+  // read the value into the script variables
+  let params = sliders.map( (s, i) => s.value * sliderMax[i] / 100);
+
+  // update the display
+  keys.map( (n, i) => document.getElementById(n+"Label").innerHTML = params[i]);
+  maxAcc = float(params[0]);
+  maxSpd = float(params[1]);
+  slowing_distance = float(params[2]);
 }
 
-
-const drawAllInOneFrame = false;
 
 function setup() {
   var canvas = createCanvas(500, 500);
@@ -36,27 +41,25 @@ function setup() {
   }
   // randPoints = points.slice();
 
-  mobile = new Mobile(0, 0);
+  mobile = new Mobile(points[0].x, points[0].y);
   mobile.targetClosest(points);
 
-  // targets = [{x:mobile.x, y:mobile.y}];
-
+  keys = ["acc", "spd", "slo"];
+  let sliders = keys.map( (key) => document.getElementById(key+"Slider"));
+  sliders.map((x) => x.oninput = sliderInput);
+  sliderInput();
 }
 
 function draw() {
   background(255);
 
   strokeWeight(2);
-  stroke(0, 0, 0);
+  stroke(0);
 
-  if (drawAllInOneFrame) {
-    drawAll();
-    noLoop();
-  } else {
-    drawPoints(4);
-    mobile.update(2);
-    mobile.draw(true);
-  }
+  mobile.targetClosest(points);
+  drawPoints(4);
+  mobile.update();
+  mobile.draw(true);
 }
 
 function drawPoints(pointSize) {
@@ -66,40 +69,25 @@ function drawPoints(pointSize) {
     p.draw();
   }
 }
-//
-// function orderPoints(pointsArray) {
-//   copyOfPoints = pointsArray.splice();
-//   var inOrder = [];
-//   var p = pointsArray[0];
-//   inOrder.push(p);
-//   var index;
-//   while (copyOfPoints.length > 0) {
-//     p = nextClosest(p, copyOfPoints);
-//     inOrder.push(p);
-//     index = copyOfPoints.indexOf(p);
-//     copyOfPoints.splice(index, 1);
-//   }
-//   return inOrder;
-// }
 
-function drawAll() {
-  var p = randPoints[0];
-  noFill();
-  stroke(255, 32, 32);
-  drawPoints(4);
-  strokeWeight(1);
-  curveTightness(0);
-  beginShape();
-  while (p) {
-    var x = p.x;
-    var y = p.y;
-    curveVertex(x, y);
-    p = nextClosest(p, randPoints);
-    var index = randPoints.indexOf(p);
-    randPoints.splice(index, 1);
-  }
-  endShape();
-}
+// function drawAll() {
+//   var p = randPoints[0];
+//   noFill();
+//   stroke(255, 32, 32);
+//   drawPoints(4);
+//   strokeWeight(1);
+//   curveTightness(0);
+//   beginShape();
+//   while (p) {
+//     var x = p.x;
+//     var y = p.y;
+//     curveVertex(x, y);
+//     p = nextClosest(p, randPoints);
+//     var index = randPoints.indexOf(p);
+//     randPoints.splice(index, 1);
+//   }
+//   endShape();
+// }
 
 function nextClosest(here, pts) {
   var dmin = width * width + height * height;
@@ -114,4 +102,3 @@ function nextClosest(here, pts) {
   }
   return ret;
 }
-
