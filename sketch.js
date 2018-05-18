@@ -1,26 +1,46 @@
 var points = [];
 var nb_points = 100;
-const maxSpeed = 50; // px / frame
-const maxAcc = 1;
+var maxSpeed = 2; // px / frame
+var maxAcc = 0.5;
 var mobile;
-// var targets;
+
+
+
+var body = document.getElementsByTagName('body')[0];
+var accSlider = document.getElementById("accSlider");
+var spdSlider = document.getElementById("spdSlider");
+var accLabel = document.getElementById("accLabel");
+var spdLabel = document.getElementById("spdLabel");
+
+// Update the current slider value (each time you drag the slider handle)
+accSlider.onchange = function() {
+    maxAcc = this.value * 5 / 100 ;
+    accLabel.innerHTML = maxAcc;
+}
+
+spdSlider.onchange = function() {
+    maxSpd = this.value * 20 / 100;
+    spdLabel.innerHTML = maxSpd;
+}
+
 
 const drawAllInOneFrame = false;
 
 function setup() {
-  createCanvas(500, 500);
+  var canvas = createCanvas(500, 500);
   frameRate(120);
+  let margin = 20;
   for (var i = 0; i < nb_points; i++) {
-      var p = new Point(random(width), random(height));
+      let p = new Point(margin + random(width - 2 * margin), margin + random(height - 2 * margin));
       points.push(p);
   }
-
   // randPoints = points.slice();
 
   mobile = new Mobile(0, 0);
   mobile.targetClosest(points);
 
   // targets = [{x:mobile.x, y:mobile.y}];
+
 }
 
 function draw() {
@@ -33,8 +53,8 @@ function draw() {
     drawAll();
     noLoop();
   } else {
-    drawPoints();
-    mobile.update();
+    drawPoints(4);
+    mobile.update(2);
     mobile.draw(true);
   }
 }
@@ -94,3 +114,4 @@ function nextClosest(here, pts) {
   }
   return ret;
 }
+

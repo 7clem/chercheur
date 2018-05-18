@@ -3,13 +3,22 @@
   <head>
     <meta name="viewport" width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0>
     <style> body {padding: 0; margin: 0;} </style>
-    <script src="../p5.min.js"></script>
+    <script src="../p5.js"></script>
     <!-- <script src="../addons/p5.dom.min.js"></script> -->
     <!-- <script src="../addons/p5.sound.min.js"></script> -->
     <!-- <script src="path.js"></script> -->
-    <script src="mobile.js"></script>
-    <script src="sketch.js"></script>
+
   </head>
   <body>
+    <div class="slidecontainer">
+      <input type="range" min="0" max="100" value="50" class="slider" id="accSlider">
+      Max Acceleration : <span id="accLabel"></span>
+    </div>
+<div class="slidecontainer">
+    <input type="range" min="0" max="100" value="50" class="slider" id="spdSlider">
+    Max Speed : <span id="spdLabel"></span>
+</div>
   </body>
+  <script src="mobile.js"></script>
+  <script src="sketch.js"></script>
 </html>

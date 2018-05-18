@@ -27,23 +27,41 @@ class Mobile extends Point {
     this.target(nextClosest(this, targetArray));
   }
 
-  update() {
+  seek() {
     if (this._target) {
       var desiredSpeed = p5.Vector.sub(this._target, this);
       var steering = p5.Vector.sub(desiredSpeed, this.spd);
-      var acc = steering.setMag(maxAcc);
-
-      this.spd.add(acc);
-      this.add(this.spd);
-    } else {
-      return false;
+      this.acc = steering.setMag(maxAcc);
     }
+  }
 
-    if (p5.Vector.dist(this, this._target) < 3) {
+  arrive() {
+    var radius = 25;
+     if (this._target) {
+        var vectorToGoal = p5.Vector.sub(this._target, this);
+        var mag = vectorToGoal.mag();
+        if (vectorToGoal.mag() < radius) {
+          vectorToGoal.setMag(1 / mag);
+        }
+        var steering = p5.Vector.sub(vectorToGoal, this.spd);
+        this.acc = steering.setMag(maxAcc);
+    }
+  }
+
+  update(iterations) {
+    if (iterations == undefined) iterations = 1;
+    for (var i = 0 ; i < iterations; i++) {
+      this.seek();
+      this.spd.add(this.acc);
+      this.spd.setMag(maxSpeed);
+      this.add(this.spd);
+
+    if (this._target && p5.Vector.dist(this, this._target) < 3) {
       // this.path.push(this._target);
       var index = points.indexOf(this._target);
       points.splice(index, 1);
       this.targetClosest(points);
+    }
     }
   }
 
